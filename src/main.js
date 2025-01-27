@@ -1,6 +1,6 @@
 //Name: Brandon Apuntar
 //Mod Title: Rocket Patrol Plus
-//Mods: New Spaceship (5pts)
+//Mods: New Spaceship (5pts), Particle Emitter (5pts)
 let config = {
     type: Phaser.AUTO,
     width: 640,

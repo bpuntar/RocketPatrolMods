@@ -32,6 +32,22 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
 
+        // particle system
+
+        this.emitter = this.add.particles(0, 0, 'fire', {
+            frame: ['red'],
+            lifespan: 4000,
+            speed: {
+                min: 0, max: 50
+            },
+            scale: {
+                start: 3,
+                end: 0
+            },
+
+            emitting: false
+        });
+
         // initialize score
         this.p1Score = 0
         // display score
@@ -81,20 +97,24 @@ class Play extends Phaser.Scene {
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset()
-            this.shipExplode(this.ship03)   
+            this.shipExplode(this.ship03)
+            this.party(this.ship03)   
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset()
             this.shipExplode(this.ship02)
+            this.party(this.ship02) 
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset()
             this.shipExplode(this.ship01)
+            this.party(this.ship01) 
         }
 
         if (this.checkStinkyCollision(this.p1Rocket, this.stinkyship)) {
             this.p1Rocket.reset()
             this.stinkyshipExplode(this.stinkyship)
+            this.stinkyparty(this.stinkyship)
 
         }
 
@@ -146,6 +166,14 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points
         this.scoreLeft.text = this.p1Score
         this.sound.play('sfx-explosion')       
+    }
+
+    party(ship) {
+        this.emitter.explode(40, ship.x, ship.y)
+    }
+
+    stinkyparty(stinkyship) {
+        this.emitter.explode(200, this.stinkyship.x, this.stinkyship.y)
     }
 
     stinkyshipExplode(stinkyship) {
