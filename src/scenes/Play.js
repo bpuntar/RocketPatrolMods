@@ -6,8 +6,8 @@ class Play extends Phaser.Scene {
     create() {
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0)
-        // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0,0)
+        // mint UI background
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0xDDFFDD).setOrigin(0,0)
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0,0)
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
@@ -18,10 +18,14 @@ class Play extends Phaser.Scene {
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0)
         
         //add 3x spaceships
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0)
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0)
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceships1', 0, 30).setOrigin(0, 0)
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceships1', 0, 20).setOrigin(0,0)
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceships1', 0, 10).setOrigin(0,0)
 
+        this.ship01.play('fly');
+        this.ship02.play('fly');
+        this.ship03.play('fly');
+        
         // add Stinky ship
 
         this.stinkyship = new Stinky(this, game.config.width + borderUISize*3, borderUISize*4 + borderPadding*2, 'stinky', 0, 40).setOrigin(0,0)
@@ -52,10 +56,10 @@ class Play extends Phaser.Scene {
         this.p1Score = 0
         // display score
         let scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Arial',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#B43757',
+            color: '#FFFFFF',
             align: 'right',
             padding: {
             top: 5,
@@ -74,9 +78,21 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or < for Menu', scoreConfig).setOrigin(0.5)
             this.gameOver = true
         }, null, this)
+
+        //timer
+        this.timer = this.time.addEvent({
+            delay: game.settings.gameTimer,
+            paused: false
+        });
+        this.timetext = this.add.text(32,30)
+
     }
 
     update() {
+
+        // update timer
+        this.timetext.setText(`Time: ${this.timer.getRemainingSeconds().toFixed(1)}`);
+
         // check key input for restart
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyRESET)) {
             this.scene.restart()
